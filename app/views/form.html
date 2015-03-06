@@ -1,0 +1,58 @@
+<h2>{{ description.title }}</h2>
+<p>{{ description.abstract }}</p>
+<ul class="list-group" >
+  <li ng-repeat="input in description.dataInputs" class="list-group-item">
+    <div class="form-group"
+         ng-class="{'has-warning': input.minOccurs > 0}"
+         ng-if="input.literalData">
+      <label class="control-label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>
+      <input type="{{ getType(input) }}"
+             ng-name="input.identifier"
+             ng-model="inputs[input.identifier]"
+             value="{{ getDefault(input) }}"
+             placeholder="{{ getPlaceholder(input) }}"
+             id="{{ input.identifier }}"
+             class="form-control"
+             />
+    </div>
+    <div ng-if="input.complexData" class="form-group" ng-class="{'has-success': fileinfo[input.identifier]}">
+      <label class="control-label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>
+      <div
+         nv-file-drop=""
+         uploader="uploader"
+         options="{alias: '{{ input.identifier }}'}"
+         >
+        <div ng-hide="fileinfo[input.identifier]" >
+          <button type="button" class="btn btn-default" ng-click="getFeature(input.identifier)">Select on map</button>
+          <div class="well drop-zone" nv-file-over="" uploader="uploader" id="{{ input.identifier }}"  >
+            Drop a file (supports: <span ng-repeat="(format, a) in input.complexData.supported.formats">{{ format }} </span>).
+
+          </div>
+        </div>
+        <div ng-show="fileinfo[input.identifier]" class="well">
+          <p>
+            file: {{ fileinfo[input.identifier]['name'] }} <br />
+            size: {{ fileinfo[input.identifier]['size'] }} bytes <br />
+            type: {{ fileinfo[input.identifier]['type'] }}
+          </p>
+          <button class="btn  btn-default" ng-click="clearFile(input.identifier)">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </li>
+</div>
+</li>
+</ul>
+<p>
+  <button class="btn  btn-default" >
+    <a href="#/">Back <span class="glyphicon glyphicon-back"></span></a>
+  </button>
+  <button class="btn  btn-success" ng-click="execute()">
+    Execute <span class="glyphicon glyphicon-ok"></span>
+  </button>
+</p>
+
+
+

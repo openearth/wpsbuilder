@@ -1,0 +1,118 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>WPS Builder</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <!-- custom for map -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/evispa-timo-jsclipper/clipper.js"></script>
+    <script src="bower_components/concavehull/dist/concavehull.js"></script>
+    <script src="bower_components/leaflet.freedraw/dist/leaflet.freedraw.js"></script>
+    <style type="text/css" media="screen">
+      #map {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+
+      }
+      html,body {
+      min-height: 100%;
+      height: 100%;
+      }
+      .fill{
+      height:100%;
+      min-height:100%;
+      }
+      .scrollable {
+      height: 100%;
+      overflow: auto;
+      }
+      .nopadding {
+      padding: 0 !important;
+      margin: 0 !important;
+      }
+
+    </style>
+  </head>
+  <body ng-app="wpsbuilderApp" >
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <div class="container-fluid fill">
+    <div class="row fill">
+      <div class="col-md-3  scrollable">
+        <div ng-view="" ></div>
+      </div>
+      <div class="col-md-9 fill nopadding">
+        <div id="map" ></div>
+      </div>
+    </div>
+    </div>
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/openlayers/build/OpenLayers.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
+    <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/form.js"></script>
+    <script src="scripts/controllers/list.js"></script>
+    <script src="scripts/services/wps.js"></script>
+    <!-- endbuild -->
+
+    <script>
+      // initialize the map on the "map" div with a given center and zoom
+      var map = L.map('map', {
+          center: [51.505, -0.09],
+          zoom: 13
+      });
+      freeDraw = new L.FreeDraw();
+      map.addLayer(freeDraw);
+
+      L.tileLayer('http://{s}.tiles.mapbox.com/v3/examples.map-i875mjb7/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18
+      }).addTo(map);
+
+      // Listen for getFeature events
+      document.addEventListener('getFeature', function(ev){
+        freeDraw.mode = L.FreeDraw.MODES.CREATE;
+        console.log(freeDraw);
+        freeDraw.on('markers', function getMarkers(eventData) {
+          var latLngs = eventData.latLngs;
+          ev.detail.callback(ev.detail.identifier, latLngs);
+          console.log(ev);
+        });
+
+      });
+    </script>
+  </body>
+</html>

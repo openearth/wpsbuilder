@@ -1,0 +1,31 @@
+<style type="text/css" media="screen">
+  .form-control {
+  display: inline-block;
+  width: 100px;
+  margin: 10px;
+  }
+</style>
+<h1>A + B</h1>
+<p>Adding two numbers.</p>
+<input type="number"
+       name="a"
+       placeholder="float"
+       ng-model="inputs['a']"
+       id="a"
+       class="form-control"
+       /> +
+<input type="number"
+       name="b"
+       placeholder="float"
+       ng-model="inputs['b']"
+       id="b"
+       class="form-control"
+       />
+<p>
+  <button class="btn  btn-success" ng-click="execute()">
+    Execute <span class="glyphicon glyphicon-ok"></span>
+  </button>
+</p>
+
+
+
