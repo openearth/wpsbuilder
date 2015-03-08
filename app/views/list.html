@@ -9,7 +9,9 @@
     <p>Contact: {{ server.capabilities.serviceProvider.serviceContact.individualName }} {{ server.capabilities.serviceProvider.serviceContact.electronicMailAddress }}</p>
     <h2>Processes</h2>
     <ul ng-repeat="offering in server.capabilities.processOfferings" class="list-group">
-      <li class="list-group-item"><a href="#/form/{{ server.id }}/{{ offering.identifier }}">{{ offering.title || offering.identifier }}</a></li>
+      <li class="list-group-item">
+        <a href="#/form/{{ server.id }}/{{ offering.identifier }}">{{ offering.title || offering.identifier }}</a>
+      </li>
     </ul>
   </accordion-group>
 </accordion>

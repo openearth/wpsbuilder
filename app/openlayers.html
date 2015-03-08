@@ -1,0 +1,152 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>WPS Builder</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+
+    <!-- custom for map -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.3.0/ol.min.css" type="text/css" media="screen" />
+    <style type="text/css" media="screen">
+      #map {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+
+      }
+      html,body {
+      min-height: 100%;
+      height: 100%;
+      }
+      .fill{
+      height:100%;
+      min-height:100%;
+      }
+      .scrollable {
+      height: 100%;
+      overflow: auto;
+      }
+      .nopadding {
+      padding: 0 !important;
+      margin: 0 !important;
+      }
+
+    </style>
+  </head>
+  <body ng-app="wpsbuilderApp" >
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <div class="container-fluid fill">
+      <div class="row fill">
+        <div class="col-md-3  scrollable">
+          <div ng-view="" ></div>
+        </div>
+        <div class="col-md-9 fill nopadding">
+          <div id="map" ></div>
+        </div>
+      </div>
+    </div>
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/openlayers/build/OpenLayers.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
+    <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- custom for map -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.3.0/ol.min.js"></script>
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/form.js"></script>
+    <script src="scripts/controllers/list.js"></script>
+    <script src="scripts/services/wps.js"></script>
+    <!-- endbuild -->
+
+    <script>
+      // initialize the map on the "map" div with a given center and zoom
+      var raster = new ol.layer.Tile({
+          source: new ol.source.MapQuest({layer: 'sat'})
+      });
+
+      var source = new ol.source.Vector();
+
+      var vector = new ol.layer.Vector({
+          source: source,
+          style: new ol.style.Style({
+              fill: new ol.style.Fill({
+                  color: 'rgba(255, 255, 255, 0.2)'
+              }),
+              stroke: new ol.style.Stroke({
+                  color: '#ffcc33',
+                  width: 2
+              }),
+              image: new ol.style.Circle({
+                  radius: 7,
+                  fill: new ol.style.Fill({
+                      color: '#ffcc33'
+                  })
+              })
+          })
+      });
+
+      var map = new ol.Map({
+          layers: [raster, vector],
+          target: 'map',
+          view: new ol.View({
+              center: [-11000000, 4600000],
+              zoom: 4
+          })
+      });
+
+
+      var draw; // global so we can remove it later
+      function addInteraction() {
+          draw = new ol.interaction.Draw({
+              source: source,
+              type: 'Polygon'
+              });
+          map.addInteraction(draw);
+      }
+
+
+
+      // Listen for getFeature events
+      document.addEventListener('getFeature', function(ev){
+          addInteraction();
+          draw.once('drawend', function(ev2){
+              console.log(ev2);
+              // Return feature to the callback
+              writer = new ol.format.GeoJSON();
+              ev.detail.callback(ev.detail.identifier, writer.writeFeature(ev2.feature));
+          });
+
+
+      });
+    </script>
+  </body>
+</html>

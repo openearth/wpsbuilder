@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc overview
  * @name wpsbuilderApp
@@ -40,3 +39,4 @@ angular
                 redirectTo: '/'
             });
     });
+

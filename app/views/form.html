@@ -24,10 +24,10 @@
          >
         <div ng-hide="fileinfo[input.identifier]" >
           <button type="button" class="btn btn-default" ng-click="getFeature(input.identifier)">Select on map</button>
-          <div class="well drop-zone" nv-file-over="" uploader="uploader" id="{{ input.identifier }}"  >
-            Drop a file (supports: <span ng-repeat="(format, a) in input.complexData.supported.formats">{{ format }} </span>).
-
+          <div class="well drop-zone" nv-file-over="" uploader="uploader" id="{{ input.identifier }}" >
+            Drop a file.
           </div>
+          <span popover="{{ info(input) }}" popover-title="Supported formats" popover-trigger="mouseenter"><span class="glyphicon glyphicon-info-sign"></span></span>
         </div>
         <div ng-show="fileinfo[input.identifier]" class="well">
           <p>

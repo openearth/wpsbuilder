@@ -13,6 +13,7 @@ body {
     border: dotted 3px lightgray;
     display: inline-block;
     padding: 6px 12px;
+    max-width: 400px;
 }
 
 .nv-file-over {

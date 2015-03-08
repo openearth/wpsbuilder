@@ -1,4 +1,4 @@
-## WPS Builder
+# WPS Builder
 Application that generates forms for Web Processing Services.
 
 This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)

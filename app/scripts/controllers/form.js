@@ -53,6 +53,11 @@ angular.module('wpsbuilderApp')
             'boolean': {type: 'boolean', reference: 'http://www.w3.org/TR/xmlschema-2/#boolean', htmltype: 'checkbox', placeholder: ''}
         };
 
+
+        $scope.info = function(input){
+            var text = _.map(input.complexData.supported.formats, function(value, key){return key;}).join(", ")
+            return text;
+        };
         // Get the type for a html input
         $scope.getType = function(input){
             if (!!input.literalData) {
