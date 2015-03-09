@@ -13,7 +13,6 @@
         "openlayers": "master",
         "underscore": "~1.8.2",
         "angular-file-upload": "~1.1.5",
-        "angular-ui-bootstrap": "~0.12.1",
         "angular-ui-bootstrap-bower": "~0.12.1"
     },
     "devDependencies": {
