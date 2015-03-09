@@ -9,11 +9,15 @@
       <input type="{{ getType(input) }}"
              ng-name="input.identifier"
              ng-model="inputs[input.identifier]"
+             ng-hide="input.literalData.allowedValues"
              value="{{ getDefault(input) }}"
              placeholder="{{ getPlaceholder(input) }}"
              id="{{ input.identifier }}"
              class="form-control"
              />
+      <select ng-name="input.identifier" ng-show="input.literalData.allowedValues" class="form-control" ng-model="inputs[input.identifier]">
+        <option value="{{ allowed }}" ng-repeat="(allowed, key) in input.literalData.allowedValues">{{ allowed }}</option>
+      </select>
     </div>
     <div ng-if="input.complexData" class="form-group" ng-class="{'has-success': fileinfo[input.identifier]}">
       <label class="control-label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>

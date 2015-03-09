@@ -50,7 +50,9 @@ angular.module('wpsbuilderApp')
             'string': {type: 'string', reference: 'http://www.w3.org/TR/xmlschema-2/#string', htmltype: 'text', placeholder: 'text'},
             'float': {type: 'float', reference: 'http://www.w3.org/TR/xmlschema-2/#float', htmltype: 'number', placeholder: 'float'},
             'integer': {type: 'integer', reference: 'http://www.w3.org/TR/xmlschema-2/#integer', htmltype: 'number', placeholder: 'integer'},
-            'boolean': {type: 'boolean', reference: 'http://www.w3.org/TR/xmlschema-2/#boolean', htmltype: 'checkbox', placeholder: ''}
+            'boolean': {type: 'boolean', reference: 'http://www.w3.org/TR/xmlschema-2/#boolean', htmltype: 'checkbox', placeholder: ''},
+            'dateTime': {type: 'dateTime', reference: 'http://www.w3.org/TR/xmlschema-2/#dateTime', htmltype: 'date', placeholder: ''},
+            'date': {type: 'date', reference: 'http://www.w3.org/TR/xmlschema-2/#date', htmltype: 'date', placeholder: ''}
         };
 
 
@@ -119,6 +121,16 @@ angular.module('wpsbuilderApp')
         };
         $scope.execute = function(){
             console.log('Executing with', $scope);
+            var options = {
+                server: $scope.server,
+                process: $scope.identifier,
+                inputs: _.extend({}, $scope.inputs, $scope.files),
+                success: function(outputs){
+                    console.log(outputs);
+                }
+            };
+            client.execute(options);
+
         };
 
         uploader.onAfterAddingFile = function(fileItem) {

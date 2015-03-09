@@ -430,7 +430,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
-        'buildpy',
+        'buildpy:-c none',
         'wiredep',
         'useminPrepare',
         'concurrent:dist',

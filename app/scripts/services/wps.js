@@ -53,5 +53,18 @@ angular.module('wpsbuilderApp')
             //     version: '1.0.0'
             // }
         ];
+        if (document.location.origin.match('localhost')) {
+            // local pywps
+            var localhost = {
+                id: 'localhost',
+                title: 'Local machine',
+                url: 'http://localhost:6543',
+                capabilities: {},
+                processDescription: {},
+                version: '1.0.0'
+            };
+            console.log('adding', localhost);
+            servers.push(localhost);
+        };
         return servers;
     });
