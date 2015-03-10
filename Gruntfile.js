@@ -392,7 +392,7 @@ module.exports = function (grunt) {
         },
         buildpy: {
             options: {
-                cwd: 'bower_components/openlayers/build'
+                cwd: 'bower_components/siggyf-openlayers/build'
             }
         }
     });

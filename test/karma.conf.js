@@ -29,7 +29,7 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
-      'bower_components/openlayers/build/OpenLayers.js',
+      'bower_components/siggyf-openlayers/build/OpenLayers.js',
       'bower_components/underscore/underscore.js',
       'bower_components/angular-file-upload/angular-file-upload.js',
       'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
