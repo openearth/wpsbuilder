@@ -1,62 +1,145 @@
-<h2>{{ description.title }}</h2>
-<p>{{ description.abstract }}</p>
-<ul class="list-group" >
-  <li ng-repeat="input in description.dataInputs" class="list-group-item">
-    <div class="form-group"
-         ng-class="{'has-warning': input.minOccurs > 0}"
-         ng-if="input.literalData">
-      <label class="control-label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>
-      <input type="{{ getType(input) }}"
-             ng-name="input.identifier"
-             ng-model="inputs[input.identifier]"
-             ng-hide="input.literalData.allowedValues"
-             value="{{ getDefault(input) }}"
-             placeholder="{{ getPlaceholder(input) }}"
-             id="{{ input.identifier }}"
-             class="form-control"
-             />
-      <select ng-name="input.identifier" ng-show="input.literalData.allowedValues" class="form-control" ng-model="inputs[input.identifier]">
-        <option value="{{ allowed }}" ng-repeat="(allowed, key) in input.literalData.allowedValues">{{ allowed }}</option>
-      </select>
-    </div>
-    <div ng-if="input.complexData" class="form-group" ng-class="{'has-success': fileinfo[input.identifier]}">
-      <label class="control-label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>
-      <div
-         nv-file-drop=""
-         uploader="uploader"
-         options="{alias: '{{ input.identifier }}'}"
-         >
-        <div ng-hide="fileinfo[input.identifier]" >
-          <button type="button" class="btn btn-default" ng-click="getFeature(input.identifier)">Select on map</button>
-          <div class="well drop-zone" nv-file-over="" uploader="uploader" id="{{ input.identifier }}" >
-            Drop a file.
-          </div>
-          <span popover="{{ info(input) }}" popover-title="Supported formats" popover-trigger="mouseenter"><span class="glyphicon glyphicon-info-sign"></span></span>
+<div ng-hide="description.identifier">
+  <div class="panel">
+    <i class="fa fa-spinner fa-pulse fa-3x"></i>
+  </div>
+</div>
+
+<div ng-show="description.identifier">
+  <h2>{{ description.title }}</h2>
+
+
+  <p>{{ description.abstract }} </p>
+
+  <ul class="list-group" >
+    <li ng-repeat="input in description.dataInputs" class="list-group-item">
+      <!-- literalData -->
+      <div class="form-group"
+           ng-class="{'has-warning': input.minOccurs > 0}"
+           ng-if="input.literalData">
+        <label class="control-label" id="{{ input.identifier }}label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>
+        <!-- numbers, strings -->
+        <input type="{{ getType(input) }}"
+               ng-name="input.identifier"
+               ng-model="inputs[input.identifier]"
+               ng-if="!(input.literalData.allowedValues) && (getType(input) !== 'date')"
+               value="{{ getDefault(input) }}"
+               placeholder="{{ getPlaceholder(input) }}"
+               id="{{ input.identifier }}"
+               class="form-control"
+               />
+        <!-- date/time -->
+        <div class="dropdown" ng-if="getType(input) == 'date'">
+          <a class="dropdown-toggle" id="{{ input.identifier }}dropdown" role="button" data-toggle="dropdown" >
+            <div class="input-group">
+              <input
+                 type="text"
+                 class="form-control"
+                 id="{{ input.identifier }}"
+                 ng-name="input.identifier"
+                 data-ng-model="inputs[input.identifier]"
+                 />
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="{{ input.identifier }}label">
+            <datetimepicker
+               data-ng-model="inputs[input.identifier]"
+               data-datetimepicker-config="{ dropdownSelector: '#{{ input.identifier }}dropdown' }"
+               />
+          </ul>
         </div>
-        <div ng-show="fileinfo[input.identifier]" class="well">
-          <p>
-            file: {{ fileinfo[input.identifier]['name'] }} <br />
-            size: {{ fileinfo[input.identifier]['size'] }} bytes <br />
-            type: {{ fileinfo[input.identifier]['type'] }}
-          </p>
-          <button class="btn  btn-default" ng-click="clearFile(input.identifier)">
-            <span class="glyphicon glyphicon-trash"></span>
-          </button>
+        <!-- selection -->
+        <div ng-if="input.literalData.allowedValues">
+          <select
+             class="form-control"
+             ng-model="inputs[input.identifier]"
+             >
+            <option
+               ng-repeat="(allowed, value) in input.literalData.allowedValues"
+               ng-selected="inputs[input.identifier] === allowed"
+               ng-value="allowed">
+              {{allowed}}
+            </option>
+          </select>
         </div>
       </div>
-    </div>
-  </li>
+      <!-- complexData -->
+      <div ng-if="input.complexData" class="form-group" ng-class="{'has-success': fileinfo[input.identifier]}">
+        <label class="control-label" for="{{ input.identifier }}">{{ input.title }} ({{input.identifier }})</label>
+        <div
+           nv-file-drop=""
+           uploader="uploader"
+           options="{alias: '{{ input.identifier }}'}"
+           >
+          <div ng-hide="fileinfo[input.identifier]" >
+            <button type="button" class="btn btn-default" ng-click="getFeature(input.identifier)">Select on map</button>
+            <div class="well drop-zone" nv-file-over="" uploader="uploader" id="{{ input.identifier }}" >
+              Drop a file.
+            </div>
+            <span popover="{{ info(input) }}" popover-title="Supported formats" popover-trigger="mouseenter"><span class="glyphicon glyphicon-info-sign"></span></span>
+          </div>
+          <div ng-show="fileinfo[input.identifier]" class="well">
+            <p>
+              file: {{ fileinfo[input.identifier]['name'] }} <br />
+              size: {{ fileinfo[input.identifier]['size'] }} bytes <br />
+              type: {{ fileinfo[input.identifier]['type'] }}
+            </p>
+            <button class="btn  btn-default" ng-click="clearFile(input.identifier)">
+              <span class="glyphicon glyphicon-trash"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="btn-group" role="group" aria-label="menu">
+    <button class="btn  btn-default">
+      <a href="#/">
+        <i class="fa fa-chevron-left"></i>
+      </a>
+    </button>
+    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#xml" aria-expanded="false" aria-controls="xml" title="xml">
+      <i class="fa fa-file-code-o"></i>
+    </button>
+    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#scope" aria-expanded="false" aria-controls="scope" title="scope">
+      <i class="fa fa-file-text-o"></i>
+    </button>
+    <button class="btn  btn-success" ng-click="execute()">
+      Execute <i class="fa fa-check"></i>
+    </button>
+  </div>
+  <div class="collapse" id="xml">
+    <div hljs source="raw"></div>
+  </div>
+  <div class="collapse" id="scope">
+    <pre>
+{{ inputs }}
+</pre>
+  </div>
+
 </div>
-</li>
-</ul>
-<p>
-  <button class="btn  btn-default" >
-    <a href="#/">Back <span class="glyphicon glyphicon-back"></span></a>
-  </button>
-  <button class="btn  btn-success" ng-click="execute()">
-    Execute <span class="glyphicon glyphicon-ok"></span>
-  </button>
-</p>
+
+<div ng-show="result.executeResponse.status.status == 'failed'">
+  <div class="btn-group" role="group" aria-label="menu">
+    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#responseText" aria-expanded="false" aria-controls="xml" title="responseText">
+      <i class="fa fa-file-code-o"></i>
+    </button>
+  </div>
+
+  <div class="alert alert-danger alert-dismissible"
+       ng-repeat="exception in result.executeResponse.status.exceptionReport.exceptions"
+       >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <p><b>{{ exception.code }}</b></p>
+    <p>{{ exception.texts.join(' ') }}</p>
+  </div>
+  <div hljs source="responseText" id="responseText" class="collapse"></div>
+
+</div>
+
 
 
 

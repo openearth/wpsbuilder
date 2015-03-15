@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals angular, OpenLayers, _, console, moment */
+
 /**
  * @ngdoc function
  * @name wpsbuilderApp.controller:FormCtrl
@@ -7,6 +9,8 @@
  * # FormCtrl
  * Controller of the wpsbuilderApp
  */
+
+
 angular.module('wpsbuilderApp')
     .controller('FormCtrl', ['$scope', '$routeParams', 'wps', 'FileUploader', function ($scope, $routeParams, wps, FileUploader) {
         $scope.servers = wps;
@@ -19,6 +23,9 @@ angular.module('wpsbuilderApp')
         $scope.server = $routeParams.server;
         $scope.identifier = $routeParams.identifier;
         $scope.description = {};
+        $scope.raw = '';
+        $scope.result = {};
+        $scope.responseText = '';
         // Transform servers to expected format by OpenLayers
         var servers = _.object(_.map($scope.servers, function(server){
             return [server.id, server];
@@ -28,15 +35,95 @@ angular.module('wpsbuilderApp')
             servers: servers,
             lazy: false
         });
+        client.events.on({describeprocess: function(evt){
+            // raw xml
+            $scope.raw = evt.raw;
+        }});
         $scope.process = client.getProcess($scope.server, $scope.identifier, {
             callback: function(process){
                 console.log('got process', process);
             }
         });
+
+// Mappings for datatypes
+        var literalDataTypes = {
+            'string': {
+                type: 'string',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#string',
+                htmltype: 'text',
+                placeholder: 'text',
+                converter: function(x) { return x;}
+            },
+            'float': {
+                type: 'float',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#float',
+                htmltype: 'number',
+                placeholder: 'float',
+                converter: function(x) { return parseFloat(x);}
+            },
+            'integer': {
+                type: 'integer',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#integer',
+                htmltype: 'number',
+                placeholder: 'integer',
+                converter: function(x){ return parseInt(x);}
+            },
+            'boolean': {
+                type: 'boolean',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#boolean',
+                htmltype: 'checkbox',
+                placeholder: '',
+                converter: function(x){
+                    // test for boolean
+                    var falsy = /^(?:f(?:alse)?|no?|0+)$/i;
+                    return !falsy.test(x) && !!x;
+                }
+            },
+            'dateTime': {
+                type: 'dateTime',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#dateTime',
+                htmltype: 'date',
+                placeholder: '',
+                converter: function(x){
+                    var date = new moment(x);
+                    if (date.isValid()) {
+                        return date;
+                    } else {
+                        // if not converted return original
+                        return x;
+                    }
+                }
+            },
+            'date': {
+                type: 'date',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#date',
+                htmltype: 'date',
+                placeholder: '',
+                converter: function(x){
+                    return new moment(x);
+                }
+
+            }
+        };
+
         $scope.process.describe({
             callback: function(description){
                 console.log('got description', description);
                 $scope.description = description;
+                // update values to defaults
+                _.each(
+                    description.dataInputs,
+                    function(input){
+                        if (input.literalData) {
+                            console.log('defaults in', input, this);
+                            if (input.literalData.defaultValue) {
+                                var converter = literalDataTypes[input.literalData.dataType].converter;
+                                $scope.inputs[input.identifier] = converter(input.literalData.defaultValue);
+                            }
+                        }
+                    },
+                    {}
+                );
                 // update scope manually
                 // because it has nested dictionaries
                 if(!$scope.$$phase) {
@@ -45,19 +132,14 @@ angular.module('wpsbuilderApp')
 
             }
         });
-        // Mappings for datatypes
-        var literalDataTypes = {
-            'string': {type: 'string', reference: 'http://www.w3.org/TR/xmlschema-2/#string', htmltype: 'text', placeholder: 'text'},
-            'float': {type: 'float', reference: 'http://www.w3.org/TR/xmlschema-2/#float', htmltype: 'number', placeholder: 'float'},
-            'integer': {type: 'integer', reference: 'http://www.w3.org/TR/xmlschema-2/#integer', htmltype: 'number', placeholder: 'integer'},
-            'boolean': {type: 'boolean', reference: 'http://www.w3.org/TR/xmlschema-2/#boolean', htmltype: 'checkbox', placeholder: ''},
-            'dateTime': {type: 'dateTime', reference: 'http://www.w3.org/TR/xmlschema-2/#dateTime', htmltype: 'date', placeholder: ''},
-            'date': {type: 'date', reference: 'http://www.w3.org/TR/xmlschema-2/#date', htmltype: 'date', placeholder: ''}
-        };
+
 
 
         $scope.info = function(input){
-            var text = _.map(input.complexData.supported.formats, function(value, key){return key;}).join(", ")
+            var text = _.map(
+                input.complexData.supported.formats,
+                function(value, key){return key;}
+            ).join(', ');
             return text;
         };
         // Get the type for a html input
@@ -71,10 +153,18 @@ angular.module('wpsbuilderApp')
             return 'text';
         };
 
+        $scope.getDefault = function(input) {
+            if (!!input.literalData) {
+                return input.literalData.defaultValue;
+            } else {
+                return '';
+            }
+        };
+
         // Get the placeholder for an input field
         $scope.getPlaceholder = function(input){
             if (!!input.literalData) {
-                return input.literalData.DefaultValue || literalDataTypes[input.literalData.dataType].placeholder;
+                return input.literalData.defaultValue || literalDataTypes[input.literalData.dataType].placeholder;
             } else if (!!input.complexData) {
                 return input.complexData['default'].formats;
             }
@@ -90,6 +180,8 @@ angular.module('wpsbuilderApp')
 
         $scope.getFeature = function(identifier){
             console.log('Firing getFeature for', identifier);
+            // use initCustomEvent if you want IE support
+            // https://msdn.microsoft.com/en-us/library/ie/ff975299(v=vs.85).aspx
             var event = new CustomEvent('getFeature', {
                 detail: {
                     scope: $scope,
@@ -127,6 +219,11 @@ angular.module('wpsbuilderApp')
                 inputs: _.extend({}, $scope.inputs, $scope.files),
                 success: function(outputs){
                     console.log(outputs);
+                    $scope.result = outputs.result;
+                    $scope.responseText = outputs.responseText;
+                    if(!$scope.$$phase) {
+                        $scope.$digest();
+                    }
                 }
             };
             client.execute(options);
