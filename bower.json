@@ -1,30 +1,34 @@
 {
-    "name": "wpsbuilder",
-    "version": "0.0.0",
-    "dependencies": {
-        "angular": "^1.3.0",
-        "bootstrap": "^3.2.0",
-        "angular-animate": "^1.3.0",
-        "angular-cookies": "^1.3.0",
-        "angular-resource": "^1.3.0",
-        "angular-route": "^1.3.0",
-        "angular-sanitize": "^1.3.0",
-        "angular-touch": "^1.3.0",
-        "siggyf-openlayers": "~2.13.2-dev",
-        "underscore": "~1.8.2",
-        "angular-file-upload": "~1.1.5",
-        "angular-ui-bootstrap-bower": "~0.12.1"
-    },
-    "devDependencies": {
-        "angular-mocks": "^1.3.0",
-        "leaflet.freedraw": "~1.1.7",
-        "leaflet": "~0.7.3"
-    },
-    "appPath": "app",
-    "moduleName": "wpsbuilderApp",
-    "resolutions": {
-        "angular" : "~1.3.14",
-        "underscore": "~1.8.2"
-    }
-
+  "name": "wpsbuilder",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "^1.3.0",
+    "bootstrap": "^3.2.0",
+    "angular-animate": "^1.3.0",
+    "angular-cookies": "^1.3.0",
+    "angular-resource": "^1.3.0",
+    "angular-route": "^1.3.0",
+    "angular-sanitize": "^1.3.0",
+    "angular-touch": "^1.3.0",
+    "siggyf-openlayers": "~2.13.2-dev",
+    "underscore": "~1.8.2",
+    "angular-file-upload": "~1.1.5",
+    "angular-ui-bootstrap-bower": "~0.12.1",
+    "font-awesome": "~4.3.0",
+    "highlightjs": "~8.4.0",
+    "angular-highlightjs": "~0.4.1",
+    "angular-bootstrap-datetimepicker": "~0.3.11",
+    "moment": "~2.9.0"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.3.0",
+    "leaflet.freedraw": "~1.1.7",
+    "leaflet": "~0.7.3"
+  },
+  "appPath": "app",
+  "moduleName": "wpsbuilderApp",
+  "resolutions": {
+    "angular": "~1.3.14",
+    "underscore": "~1.8.2"
+  }
 }
