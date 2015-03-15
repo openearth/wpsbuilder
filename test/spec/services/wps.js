@@ -1,5 +1,5 @@
 'use strict';
-
+/* global OpenLayers */
 
 describe('Service: wps', function () {
 

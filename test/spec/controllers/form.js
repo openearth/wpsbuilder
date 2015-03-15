@@ -24,6 +24,6 @@ describe('Controller: FormCtrl', function () {
     }));
 
     it('should attach have servers in the scope', function () {
-        expect(scope.servers.length).toBe(2);
+        expect(scope.servers.length).toBeGreaterThan(2);
     });
 });

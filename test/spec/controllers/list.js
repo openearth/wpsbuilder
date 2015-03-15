@@ -17,6 +17,6 @@ describe('Controller: ListCtrl', function () {
   }));
 
   it('should attach a list of servers to the scope', function () {
-    expect(scope.servers.length).toBe(2);
+    expect(scope.servers.length).toBeGreaterThan(2);
   });
 });
