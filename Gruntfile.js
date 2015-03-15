@@ -180,7 +180,8 @@ module.exports = function (grunt) {
             app: {
                 src: [
                     '<%= yeoman.app %>/index.html',
-                    '<%= yeoman.app %>/leaflet.html'
+                    '<%= yeoman.app %>/leaflet.html',
+                    '<%= yeoman.app %>/openlayers.html'
                      ],
                 ignorePath:  /\.\.\//
             },
