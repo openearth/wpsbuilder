@@ -38,7 +38,6 @@ module.exports = function(config) {
       'bower_components/moment/moment.js',
       'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'bower_components/d3/d3.js',
-      'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/leaflet/dist/leaflet.js',
       'bower_components/leaflet/dist/leaflet-src.js',
       'bower_components/graham_scan/graham_scan.min.js',
@@ -46,6 +45,7 @@ module.exports = function(config) {
       'bower_components/evispa-timo-jsclipper/clipper.js',
       'bower_components/hammerjs/hammer.js',
       'bower_components/leaflet.freedraw/dist/leaflet.freedraw.js',
+      'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
