@@ -1,4 +1,6 @@
-var xml;
+'use strict';
+/* globals hljs */
+
 $(document).ready(function(){
     // load highlight
     hljs.initHighlighting();
@@ -7,10 +9,10 @@ $(document).ready(function(){
     document.addEventListener('response', function(evt){
         var scope = evt.detail.scope;
         var text = evt.detail.output.responseText;
-        xml = $.parseXML(text);
+        var xml = $.parseXML(text);
         // why is this necessary?
         var root = xml.children[0];
-        var statusLocation = root.getAttribute('statusLocation')
+        var statusLocation = root.getAttribute('statusLocation');
         console.log('statusLocation', statusLocation);
         if (statusLocation) {
             $.get(statusLocation, function(data){

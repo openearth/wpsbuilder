@@ -65,6 +65,6 @@ angular.module('wpsbuilderApp')
             };
             console.log('adding', localhost);
             servers.push(localhost);
-        };
+        }
         return servers;
     });
