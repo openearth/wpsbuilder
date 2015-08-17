@@ -43,7 +43,6 @@ module.exports = function(config) {
       'bower_components/graham_scan/graham_scan.min.js',
       'bower_components/concavehull/dist/concavehull.min.js',
       'bower_components/evispa-timo-jsclipper/clipper.js',
-      'bower_components/hammerjs/hammer.js',
       'bower_components/leaflet.freedraw/dist/leaflet.freedraw.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower

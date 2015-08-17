@@ -88,7 +88,6 @@
     <script src="bower_components/graham_scan/graham_scan.min.js"></script>
     <script src="bower_components/concavehull/dist/concavehull.min.js"></script>
     <script src="bower_components/evispa-timo-jsclipper/clipper.js"></script>
-    <script src="bower_components/hammerjs/hammer.js"></script>
     <script src="bower_components/leaflet.freedraw/dist/leaflet.freedraw.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
@@ -141,24 +140,31 @@
 
 
       var draw; // global so we can remove it later
-      function addInteraction() {
+      function addInteraction(type) {
           draw = new ol.interaction.Draw({
               source: source,
-              type: 'Polygon'
+              type: type
               });
           map.addInteraction(draw);
+          return draw;
       }
 
 
 
       // Listen for getFeature events
       document.addEventListener('getFeature', function(ev){
-          addInteraction();
+          console.log('feature request', ev);
+          var type = 'Polygon';
+          if (ev.detail.identifier.indexOf('point') >= 0) {
+             type = 'Point';
+          }
+          var interaction = addInteraction(type);
           draw.once('drawend', function(ev2){
               console.log(ev2);
               // Return feature to the callback
               writer = new ol.format.GeoJSON();
               ev.detail.callback(ev.detail.identifier, writer.writeFeature(ev2.feature));
+              map.removeInteraction(interaction);
           });
 
 

@@ -220,6 +220,15 @@ angular.module('wpsbuilderApp')
                 success: function(outputs){
                     console.log(outputs);
                     $scope.result = outputs.result;
+                    // fire a custom even twhen the document results are ready
+                    var event = new CustomEvent('response', {
+                        detail: {
+                            scope: $scope,
+                            output: outputs,
+                            identifier: $scope.identifier
+                        }
+                    });
+                    document.dispatchEvent(event);
                     $scope.responseText = outputs.responseText;
                     if(!$scope.$$phase) {
                         $scope.$digest();
