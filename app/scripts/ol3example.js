@@ -65,19 +65,10 @@ $((function(){
             // Return feature to the callback
             var writer = new ol.format.GeoJSON();
             var feature = ev2.feature;
+            var geometry = feature.getGeometry();
             var src2dst = ol.proj.getTransform('EPSG:3857', 'EPSG:4326');
-            if (type === 'Polygon') {
-                // we only transform the exterior (for now)....
-                var exterior = feature.geometry.coordinates[0];
-                feature.geometry.coordinates[0] = _.map(exterior, function(x){ return src2dst(x);});
-            } else {
-                // we replace the only coordiante
-                var coordinates =  feature.geometry.coordinates;
-                feature.geometry.coordinates = _.map(coordinates, function(x){ return src2dst(x);});
-
-
-            }
-
+            geometry.applyTransform(src2dst);
+            feature.setGeometry(geometry);
             ev.detail.callback(ev.detail.identifier, writer.writeFeature(ev2.feature));
             map.removeInteraction(interaction);
         });
