@@ -97,17 +97,17 @@ $((function(){
                     $.get(statusLocation, function(data){
                         scope.output = data;
                     });
+                    console.log('scope', scope);
+                    // You don't want to know...
+                    // See https://angularjs.org/
+                    // http://stackoverflow.com/questions/12729122/prevent-error-digest-already-in-progress-when-calling-scope-apply
+                    if(!scope.$$phase) {
+                        scope.$digest();
+                    }
                 },
                 5000
             );
         } else {
-        }
-        console.log('scope', scope);
-        // You don't want to know...
-        // See https://angularjs.org/
-        // http://stackoverflow.com/questions/12729122/prevent-error-digest-already-in-progress-when-calling-scope-apply
-        if(!scope.$$phase) {
-            scope.$digest();
         }
 
     });
