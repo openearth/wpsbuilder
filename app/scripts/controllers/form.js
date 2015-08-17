@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals angular, OpenLayers, _, console, moment, ol */
+/* globals angular, OpenLayers, _, console, moment */
 
 /**
  * @ngdoc function
@@ -187,13 +187,6 @@ angular.module('wpsbuilderApp')
                 detail: {
                     scope: $scope,
                     callback: function(identifier, data){
-                        var feature = JSON.parse(data);
-                        var coordinates = feature.geometry.coordinates[0];
-                        var src2dst = ol.proj.getTransform('EPSG:3857', 'EPSG:4326');
-                        var wgsCoordinates = _.map(coordinates, function(x){ return src2dst(x);});
-                        feature.geometry.coordinates[0] = wgsCoordinates;
-
-                        data = JSON.stringify(feature);
                         $scope.files[identifier] = data;
                         $scope.fileinfo[identifier] = {
                             name: 'drawn on map',
