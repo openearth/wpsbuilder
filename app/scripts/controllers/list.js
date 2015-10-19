@@ -1,4 +1,5 @@
 'use strict';
+/* globals OpenLayers */
 
 /**
  * @ngdoc function
@@ -20,7 +21,8 @@ angular.module('wpsbuilderApp')
                 url: server.url,
                 params: {
                     'SERVICE': 'WPS',
-                    'REQUEST': 'GetCapabilities'
+                    'REQUEST': 'GetCapabilities',
+                    'VERSION': server.version
                 },
                 success: function(response){
                     var capabilities = new OpenLayers.Format.WPSCapabilities().read(
