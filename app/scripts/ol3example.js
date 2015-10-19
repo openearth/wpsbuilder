@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals _, console, ol */
+/* globals console, ol */
 
 $((function(){
 
@@ -94,16 +94,17 @@ $((function(){
                     // what to do after we wait...
                     // this should be ready by now....
                     // this works for rawdataoutput... or something..
-                    $.get(statusLocation, function(data){
-                        scope.output = data;
-                    });
-                    console.log('scope', scope);
-                    // You don't want to know...
-                    // See https://angularjs.org/
-                    // http://stackoverflow.com/questions/12729122/prevent-error-digest-already-in-progress-when-calling-scope-apply
-                    if(!scope.$$phase) {
-                        scope.$digest();
-                    }
+                    $.get(statusLocation)
+                        .done(function(data){
+                            scope.output = data;
+                            console.log('scope', scope);
+                            // You don't want to know...
+                            // See https://angularjs.org/
+                            // http://stackoverflow.com/questions/12729122/prevent-error-digest-already-in-progress-when-calling-scope-apply
+                            if(!scope.$$phase) {
+                                scope.$digest();
+                            }
+                        });
                 },
                 5000
             );

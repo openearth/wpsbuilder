@@ -24,8 +24,17 @@ angular.module('wpsbuilderApp')
         $scope.identifier = $routeParams.identifier;
         $scope.description = {};
         $scope.raw = '';
+        $scope.href = '';
         $scope.result = {};
-        $scope.output = '';
+        $scope.status = {
+            'tag': '',
+            'text': ''
+        };
+        $scope.output = {
+            tag: 'div',
+            content: '',
+            src: ''
+        };
         $scope.responseText = '';
         // Transform servers to expected format by OpenLayers
         var servers = _.object(_.map($scope.servers, function(server){

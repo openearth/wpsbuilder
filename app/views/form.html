@@ -140,11 +140,17 @@
 
 </div>
 
-
-
-<div ng-show="output">
-  Here's your output:
-  {{ output }}
+<div ng-show="status.tag" class="alert" ng-class="{
+                                                  'alert-success': status.tag == 'wps:ProcessSucceeded',
+                                                  'alert-info': status.tag == 'wps:ProcessAccepted',
+                                                  'alert-warning': status.tag == 'wps:ProcessPaused'
+                                                  }">
+    <strong>{{ status.tag }}</strong>
+    {{ status.text }}
 </div>
 
-
+<div ng-show="output.tag == 'div'">
+    {{ output.content }}
+</div>
+<img src="{{ output.src }}"
+     ng-show="output.tag == 'img'">
