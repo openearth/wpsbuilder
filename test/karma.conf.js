@@ -44,6 +44,8 @@ module.exports = function(config) {
       'bower_components/siggyf-openlayers/build/OpenLayers.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
+      // for openlayers testcase
+      'https://cdnjs.cloudflare.com/ajax/libs/ol3/3.3.0/ol.min.js',
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
       'test/spec/**/*.js'
