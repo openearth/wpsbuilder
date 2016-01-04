@@ -23,6 +23,8 @@ Run `grunt` for building and `grunt serve` for preview.
 
 Running `grunt test` will run the unit tests with the karma runner and the jasmine tests.
 
+[![Build Status](https://travis-ci.org/openearth/wpsbuilder.svg?branch=master)](https://travis-ci.org/openearth/wpsbuilder)
+
 ## Implementing Map callback
 
 In order to make the Select on Map button work you have to listen to the `getFeature` event on the document and call it's `event.detail.callback` with the `event.detail.identifier` and a `feature` (geojson).
