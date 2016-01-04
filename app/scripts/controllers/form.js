@@ -57,6 +57,14 @@ angular.module('wpsbuilderApp')
 
 // Mappings for datatypes
         var literalDataTypes = {
+            // default to string
+            '': {
+                type: 'string',
+                reference: 'http://www.w3.org/TR/xmlschema-2/#string',
+                htmltype: 'text',
+                placeholder: 'text',
+                converter: function(x) { return x;}
+            },
             'string': {
                 type: 'string',
                 reference: 'http://www.w3.org/TR/xmlschema-2/#string',
