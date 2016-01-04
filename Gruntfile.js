@@ -333,6 +333,16 @@ module.exports = function (grunt) {
             }
         },
 
+        // create bootstrap.css from less so that we can wiredep it.
+        less: {
+            options: {
+                paths: ["bower_components/bootstrap/less"]
+            },
+            files: {
+                    "bower_components/bootstrap/bootstrap.css" : "bower_components/bootstrap/less/bootstrap.less"
+            }
+        },
+
         // Copies remaining files to places other tasks can use
         copy: {
             dist: {
