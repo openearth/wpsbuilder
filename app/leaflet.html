@@ -105,11 +105,13 @@
       });
       freeDraw = new L.FreeDraw();
       map.addLayer(freeDraw);
-
-      L.tileLayer('http://{s}.tiles.mapbox.com/v3/examples.map-i875mjb7/{z}/{x}/{y}.png', {
-          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      maxZoom: 18
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'siggyf.c74e2e04',
+      accessToken: 'pk.eyJ1Ijoic2lnZ3lmIiwiYSI6Il8xOGdYdlEifQ.3-JZpqwUa3hydjAJFXIlMA'
       }).addTo(map);
+
 
       // Listen for getFeature events
       document.addEventListener('getFeature', function(ev){
@@ -117,7 +119,10 @@
         console.log(freeDraw);
         freeDraw.on('markers', function getMarkers(eventData) {
           var latLngs = eventData.latLngs;
-          ev.detail.callback(ev.detail.identifier, latLngs);
+          // convert polygon to linestring
+          var linestring = new L.polyline(latLngs[0]);
+          var json = JSON.stringify(linestring.toGeoJSON()['geometry']);
+          ev.detail.callback(ev.detail.identifier, json);
           console.log(ev);
         });
 
